@@ -35,7 +35,7 @@ class LeafNode(HTMLNode):
     
     def to_html(self):
         if self.value is None:
-            raise ValueError()
+            raise ValueError('LeafNode value cannot be None')
         if self.tag is None:
             return self.value
         else:
@@ -43,5 +43,25 @@ class LeafNode(HTMLNode):
                 return self.to_html_bipcode(self.tag, self.value)
             elif self.tag =='code':
                 return self.to_html_bipcode(self.tag, self.value)
+            elif self.tag =='>':
+                return self.to_html_bipcode('blockquote', self.value)
             elif self.tag == 'a':
                 return self.to_html_link(self.value, self.props_to_html())
+            elif self.tag == 'img':
+                return f'![{self.props['alt']}]({self.props['src']})'
+        
+class ParentNode(HTMLNode):
+    def __init__(self, tag, children, props = None):
+        super().__init__(tag, None, children, props)
+
+    def to_html(self):
+        if self.tag is None:
+            raise ValueError('ParentNode tag cannot be None')
+        elif self.children is None:
+            raise ValueError('ParentNode children cannot be None')
+        else:
+            children_html = ''
+            for child in self.children:
+                children_html += child.to_html()
+            return f'<{self.tag}{self.props_to_html()}>{children_html}</{self.tag}>'
+
