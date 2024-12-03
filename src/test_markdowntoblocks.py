@@ -302,6 +302,3 @@ Lets add an email mcphillips@duck.com
         for block in blocks:
             result.append(block_to_block_type(block))
         self.assertEqual(expected, result)
-
-
-        
