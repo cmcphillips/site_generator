@@ -1,6 +1,7 @@
 from enum import Enum
-
+from htmlnode import LeafNode
 class TextType(Enum):
+    TEXT = 'text'
     PARAGRAPH = 'paragraph'
     BOLD = 'bold'
     ITALIC = 'italic'
@@ -8,7 +9,7 @@ class TextType(Enum):
     IMAGE = 'image'
     UNORDERED_LIST = 'unordered_list'
     ORDERED_LIST = 'ordered_list'
-    QOUTE = 'quote'
+    QUOTE = 'quote'
     CODE = 'code'
 
 class TextNode():
@@ -23,8 +24,34 @@ class TextNode():
         else:
             return False
 
-    
     def __repr__(self):
-        return (f'TextNode({self.text}, {self.text_type.value}, {self.url})')
-        
+        if self.url is None:
+            return (f'TextNode("{self.text}", {self.text_type})')
+        else:
+            return (f'TextNode("{self.text}", {self.text_type}, {self.url})')
     
+def text_node_to_html_node(text_node):
+    
+    if text_node.text_type == TextType.TEXT:
+        return LeafNode(None, text_node.text)
+    elif text_node.text_type == TextType.PARAGRAPH:
+        return LeafNode('p', text_node.text)
+    elif text_node.text_type == TextType.BOLD:
+        return LeafNode('b', text_node.text)
+    elif text_node.text_type == TextType.ITALIC:
+        return LeafNode('i', text_node.text)
+    elif text_node.text_type == TextType.LINK:
+        return LeafNode('a', text_node.text, {'href': text_node.url})
+    elif text_node.text_type == TextType.IMAGE:
+        return LeafNode('img', '', {'src': text_node.url, 'alt': text_node.text})
+    elif text_node.text_type == TextType.UNORDERED_LIST:
+        raise NotImplemented('TextNode to Unordered Lists is not implemented')
+    elif text_node.text_type == TextType.ORDERED_LIST:
+        raise NotImplemented('TextNode to Ordered Lists is not implemented')
+    elif text_node.text_type == TextType.QUOTE:
+        raise NotImplemented('TextNode to Quote is not implemented')
+    elif text_node.text_type == TextType.CODE:
+        return LeafNode('code', text_node.text)
+    else:
+        raise Exception(f'Cannot convert TextNode of type {text_node.text_type}')
+     
