@@ -1,4 +1,5 @@
 import unittest
+import re
 from extractlink import extract_markdown_images, extract_markdown_links
 
 class TestImageExtract(unittest.TestCase):
@@ -24,4 +25,12 @@ class TestImageExtract(unittest.TestCase):
         text = 'This is text with a link ![rick roll](https://i.imgur.com/aKaOqIh.gif) and [to youtube](https://www.youtube.com/@bootdotdev)'
         expected_result = [('to youtube', 'https://www.youtube.com/@bootdotdev')]
         # print(extract_markdown_links(text))
+        self.assertEqual(extract_markdown_links(text), expected_result)
+
+    def test_singleLinkExtract(self):
+        text = '[to boot dev](https://www.boot.dev)'
+        expected_result = [('to boot dev', 'https://www.boot.dev')]
+        # print(f'extract_markdown_links: {extract_markdown_links(text)}')
+        # print(re.findall(r'(?<!!)\[(.*?)\]\((.*?)\)', text))
+
         self.assertEqual(extract_markdown_links(text), expected_result)

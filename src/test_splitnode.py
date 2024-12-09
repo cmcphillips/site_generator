@@ -1,6 +1,7 @@
 import unittest
-from splitnode import split_nodes_delimiter, split_nodes_image, split_nodes_link
-from textnode import TextNode, TextType
+from htmlnode import LeafNode
+from splitnode import split_nodes_delimiter, split_nodes_image, split_nodes_link, split_list_nodes
+from textnode import TextNode, TextType, text_node_to_html_node
 
 class TestSplitNode(unittest.TestCase):
     def test_spit_node(self):
@@ -94,6 +95,11 @@ class TestSplitNode(unittest.TestCase):
             ]
         self.assertEqual(new_node, expected_node)
 
+    def test_solo_link(self):
+        new_node = [TextNode('[to boot dev](https://www.boot.dev)', TextType.TEXT)]
+        expected_result = TextNode('to boot dev', TextType.LINK, 'https://www.boot.dev')
+        self.assertEqual(split_nodes_link(new_node)[0], expected_result)
+
     def test_textSplit(self):
         node = [TextNode('This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)', TextType.TEXT)]
         # print(f'test split: {split_nodes_image(node)}')
@@ -136,3 +142,45 @@ class TestSplitNode(unittest.TestCase):
 
         node = [TextNode(" and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a ", TextType.TEXT)]
         # print(split_nodes_image(node))
+
+    def test_splitnoes_unorderedLists(self):
+        text = '* Item 1\n* Item 2\n* Item 3'
+
+        test_results = split_list_nodes(text, TextType.UNORDERED_LIST)
+        expected_results = [
+            TextNode('Item 1', TextType.UNORDERED_LIST),
+            TextNode('Item 2', TextType.UNORDERED_LIST),
+            TextNode('Item 3', TextType.UNORDERED_LIST)
+        ]
+        self.assertEqual(expected_results, test_results)
+        # print('\nText Nodes:')
+        # for i in text_nodes:
+        #     print(i) 
+    def test_split_unorderedLists_toHtml(self):
+        text = '* Item 1\n* Item 2\n* Item 3'
+
+        test_results = list(map(lambda x: text_node_to_html_node(x), split_list_nodes(text, TextType.UNORDERED_LIST)))
+        expected_results = [
+            LeafNode('li', 'Item 1'),
+            LeafNode('li', 'Item 2'),
+            LeafNode('li', 'Item 3')
+        ]
+        self.assertEqual(list(map(lambda x: x.to_html(), test_results)), list(map(lambda x: x.to_html(), expected_results)))
+
+    def test_textToNodes_orderedLists(self):
+        text = '1. Item 1\n2. Item 2\n3. Item 3'
+
+        test_results = list(map(lambda x: text_node_to_html_node(x), split_list_nodes(text, TextType.ORDERED_LIST)))
+        expected_results = [
+            LeafNode('li', 'Item 1'),
+            LeafNode('li', 'Item 2'),
+            LeafNode('li', 'Item 3')
+        ]
+        self.assertEqual(list(map(lambda x: x.to_html(), test_results)), list(map(lambda x: x.to_html(), expected_results)))
+
+
+    # def test_split_nested_blockquote(self):
+    #     text = '> Item 1\n> Item 2\n>>Item a\n>> Item b\n> Item 3'
+    #     expected_results = [
+
+    #     ]

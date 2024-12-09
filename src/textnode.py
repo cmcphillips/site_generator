@@ -1,8 +1,11 @@
 from enum import Enum
-from htmlnode import LeafNode
+from htmlnode import LeafNode, ParentNode
+import re
+
 class TextType(Enum):
     TEXT = 'text'
     PARAGRAPH = 'paragraph'
+    HEADER = 'header'
     BOLD = 'bold'
     ITALIC = 'italic'
     LINK = 'link'
@@ -31,7 +34,9 @@ class TextNode():
             return (f'TextNode("{self.text}", {self.text_type}, {self.url})')
     
 def text_node_to_html_node(text_node):
-    
+    '''
+    Takes a TextNode and returns a LeafNode corresponding to the TextNode.text_type
+    '''
     if text_node.text_type == TextType.TEXT:
         return LeafNode(None, text_node.text)
     elif text_node.text_type == TextType.PARAGRAPH:
@@ -45,11 +50,15 @@ def text_node_to_html_node(text_node):
     elif text_node.text_type == TextType.IMAGE:
         return LeafNode('img', '', {'src': text_node.url, 'alt': text_node.text})
     elif text_node.text_type == TextType.UNORDERED_LIST:
-        raise NotImplemented('TextNode to Unordered Lists is not implemented')
+        return LeafNode('li', text_node.text)
+        # raise NotImplemented('TextNode to Unordered Lists is not implemented')
     elif text_node.text_type == TextType.ORDERED_LIST:
-        raise NotImplemented('TextNode to Ordered Lists is not implemented')
+        return LeafNode('li', text_node.text)
+        # raise NotImplemented('TextNode to Ordered Lists is not implemented')
     elif text_node.text_type == TextType.QUOTE:
-        raise NotImplemented('TextNode to Quote is not implemented')
+        # return LeafNode('blockquote', re.sub('> *', '', text_node.text))
+        return ParentNode('blockquote', [LeafNode(None, re.sub('> *', '', text_node.text))])
+        # raise NotImplemented('TextNode to Quote is not implemented')
     elif text_node.text_type == TextType.CODE:
         return LeafNode('code', text_node.text)
     else:
