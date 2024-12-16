@@ -116,7 +116,8 @@ def split_list_nodes(text, text_type):
         
     elif text_type == TextType.UNORDERED_LIST:
         if len(list(filter(lambda x: x != '', text.split('\n')))) == len(list(filter(lambda x: x[0] == '*', list(filter(lambda y: y != '', text.split('\n')))))):
-            list_items = list(map(lambda x: re.sub(r'\* *', '', x), list(filter(lambda y: y != '', text.split('\n')))))#         x[0] == '*', list(filter(lambda y: y != '', text.split('\n')))))
+            list_items = list(map(lambda x: re.sub(r'\* ', '', x), list(filter(lambda y: y != '', text.split('\n')))))#         x[0] == '*', list(filter(lambda y: y != '', text.split('\n')))))
+            # list_items = list(map(lambda x: re.sub(r'\* *', '', x), list(filter(lambda y: y != '', text.split('\n')))))#         x[0] == '*', list(filter(lambda y: y != '', text.split('\n')))))
 
         elif len(list(filter(lambda x: x != '', text.split('\n')))) == len(list(filter(lambda x: x[0] == '-', list(filter(lambda y: y != '', text.split('\n')))))):
             list_items = list(map(lambda x: re.sub(r'- *', '', x), list(filter(lambda y: y != '', text.split('\n')))))#         x[0] == '*', list(filter(lambda y: y != '', text.split('\n')))))

@@ -57,7 +57,8 @@ class LeafNode(HTMLNode):
             elif self.tag == 'a':
                 return self.to_html_link(self.value, self.props_to_html())
             elif self.tag == 'img':
-                return f'![{self.props['alt']}]({self.props['src']})'
+                return f'<img src="{self.props["src"]}" alt="{self.props["alt"]}">'
+                # return f'![{self.props['alt']}]({self.props['src']})'
             elif self.tag == 'li':
                 return self.to_html_singleTag('li', self.value)
             # elif self.tag[0] == 'h': --might not need

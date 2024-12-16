@@ -1,4 +1,5 @@
 import unittest
+import os
 from textnode import TextType
 from htmlnode import LeafNode, ParentNode
 from markdowntoblocks import markdown_to_blocks, block_to_block_type, markdown_to_html_node
@@ -433,4 +434,13 @@ This is the same quote''')]),
         self.assertEqual(list(map(lambda x: x.to_html(), [expected_result])), list(map(lambda x: x.to_html(), [result])))
 
         text = result.to_html()
-        print(repr(text))
+        #print(repr(text))
+
+
+    def test_markdownToHtmlNode_majestyContent(self):
+        with open('./content/majesty/index.md') as md:
+            doc = md.read()
+        md.close()
+
+        result = markdown_to_html_node(doc)
+        # print(result)

@@ -143,7 +143,7 @@ class TestSplitNode(unittest.TestCase):
         node = [TextNode(" and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a ", TextType.TEXT)]
         # print(split_nodes_image(node))
 
-    def test_splitnoes_unorderedLists(self):
+    def test_splitnodes_unorderedLists(self):
         text = '* Item 1\n* Item 2\n* Item 3'
 
         test_results = split_list_nodes(text, TextType.UNORDERED_LIST)

@@ -32,8 +32,31 @@ def text_to_textnodes(text):
 def list_to_textnodes(text, text_type):
     '''
     Takes a text block and returns a list of TextNodes for an Unordered or Ordered list.
+    Further breaks down the text with text_to_text_nodes.
+    Handles creating Parent and Leaf nodes.
     '''
-    return split_list_nodes(text, text_type)
+    return_nodes = []
+    list_nodes = split_list_nodes(text, text_type)
+
+    for node in list_nodes:
+        # print(node)
+        if len(text_to_textnodes(node.text)) > 1:
+            # print(text_to_textnodes(node.text))
+            parent_node = ParentNode('li', list(map(lambda x: text_node_to_html_node(x), text_to_textnodes(node.text))))
+            # print(f'Parent node: {parent_node.to_html()}')
+            return_nodes.append(ParentNode('li', list(map(lambda x: text_node_to_html_node(x), text_to_textnodes(node.text)))))
+        else:
+            return_nodes.append(text_node_to_html_node(node))
+
+    # print('\n\n\n')
+    # print('return_nodes')
+
+    # for node in return_nodes:
+    #     print(node.to_html())
+    # print('\n\n\n')
+
+    return return_nodes
+    # return split_list_nodes(text, text_type)
 
 # def quote_to_textnodes(text, text_type):
 #     pass
@@ -54,7 +77,9 @@ def text_to_children(text, tag, text_type):
     elif text_type == TextType.QUOTE:
         return ParentNode(tag, list(map(lambda x: text_node_to_html_node(x), text_to_textnodes(re.sub('> *', '', text)))))
     elif text_type in(TextType.UNORDERED_LIST, TextType.ORDERED_LIST):
-        return ParentNode(tag, list(map(lambda x: text_node_to_html_node(x), list_to_textnodes(text, text_type))))
+        return ParentNode(tag, list_to_textnodes(text, text_type))
+        # return ParentNode(tag, list(map(lambda x: text_node_to_html_node(x), list_to_textnodes(text, text_type)))) #old way
+        
     
     '''
     - handle code (call text to text nodes)
