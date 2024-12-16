@@ -53,8 +53,8 @@ def text_node_to_html_node(text_node):
         return LeafNode('li', text_node.text)
         # raise NotImplemented('TextNode to Unordered Lists is not implemented')
     elif text_node.text_type == TextType.ORDERED_LIST:
-        return LeafNode('li', text_node.text)
-        # raise NotImplemented('TextNode to Ordered Lists is not implemented')
+        return LeafNode('li', text_node.text) #old way
+        # return ParentNode('li', list(map(lambda x: text_node_to_html_node(x), text_to_textnodes(text_node.text)))) #new attempt
     elif text_node.text_type == TextType.QUOTE:
         # return LeafNode('blockquote', re.sub('> *', '', text_node.text))
         return ParentNode('blockquote', [LeafNode(None, re.sub('> *', '', text_node.text))])

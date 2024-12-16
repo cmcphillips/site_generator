@@ -47,18 +47,16 @@ class TestTextToNodes(unittest.TestCase):
 
         test_results = list_to_textnodes(text, TextType.UNORDERED_LIST)
         expected_results = [
-            TextNode('Item 1', TextType.UNORDERED_LIST),
-            TextNode('Item 2', TextType.UNORDERED_LIST),
-            TextNode('Item 3', TextType.UNORDERED_LIST)
+            LeafNode('li', 'Item 1'),
+            LeafNode('li', 'Item 2'),
+            LeafNode('li', 'Item 3')
         ]
-        self.assertEqual(expected_results, test_results)
-        # print('\nText Nodes:')
-        # for i in text_nodes:
-        #     print(i) 
+        self.assertEqual(list(map(lambda x: x.to_html(), test_results)), list(map(lambda x: x.to_html(), expected_results)))
+        
     def test_split_unorderedLists_toHtml(self):
         text = '* Item 1\n* Item 2\n* Item 3'
 
-        test_results = list(map(lambda x: text_node_to_html_node(x), list_to_textnodes(text, TextType.UNORDERED_LIST)))
+        test_results = list(list_to_textnodes(text, TextType.UNORDERED_LIST))
         expected_results = [
             LeafNode('li', 'Item 1'),
             LeafNode('li', 'Item 2'),
@@ -67,3 +65,16 @@ class TestTextToNodes(unittest.TestCase):
         self.assertEqual(list(map(lambda x: x.to_html(), test_results)), list(map(lambda x: x.to_html(), expected_results)))
     # def test_textToNodes_blockquote(self):
     #     text = '> First sentance in quote\n> Second sentance in quote\n> Third sentance in quote\n'
+
+    def test_split_unorderedLists_toHtml_withFormatting(self):
+        text = '* Item 1 is an *apple*\n* Item 2\n* Item 3'
+
+        test_results = list(list_to_textnodes(text, TextType.UNORDERED_LIST))
+        expected_results = [
+            LeafNode('li', 'Item 1 is an *apple*'),
+            LeafNode('li', 'Item 2'),
+            LeafNode('li', 'Item 3')
+        ]
+        
+        list_to_textnodes(text, TextType.UNORDERED_LIST)
+        # self.assertEqual(list(map(lambda x: x.to_html(), test_results)), list(map(lambda x: x.to_html(), expected_results)))

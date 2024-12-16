@@ -25,7 +25,7 @@ class TestHTMLNode(unittest.TestCase):
 
         # Test Image type LeafNode
         leaf_node = LeafNode('img', '', {'src': 'image_link.com', 'alt': 'Image text'})
-        self.assertEqual('![Image text](image_link.com)', leaf_node.to_html())
+        self.assertEqual('<img src="image_link.com" alt="Image text">', leaf_node.to_html())
 
     # Test that a LeafNode with value = None will raise a ValueError
     def test_LeafNode_None(self):
